@@ -9,13 +9,18 @@ class GetFlickrJsonData implements GetRawData.OnDownloadComplete {
     private List<Photo> mPhotoList = null;
     private String mLanguage;
     private String mBaseUrl;
-    private final OnDataAvailable mCallback = null;
+    private final OnDataAvailable mCallback;
+    private boolean mMatchAll;
+
+    public GetFlickrJsonData(String mLanguage, String mBaseUrl, OnDataAvailable mCallback, boolean mMatchAll) {
+        this.mLanguage = mLanguage;
+        this.mBaseUrl = mBaseUrl;
+        this.mCallback = mCallback;
+        this.mMatchAll = mMatchAll;
+    }
 
     interface OnDataAvailable {
         void onDataAvailable(List<Photo> data, DownloadStatus status);
-    }
-    public GetFlickrJsonData() {
-        super();
     }
 
     @Override

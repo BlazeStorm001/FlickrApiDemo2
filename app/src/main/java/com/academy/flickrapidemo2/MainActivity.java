@@ -12,9 +12,16 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-public class MainActivity extends AppCompatActivity implements GetRawData.OnDownloadComplete {
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements GetFlickrJsonData.OnDataAvailable {
     private static final String TAG = "MainActivity";
     private String feedUrl = "https://www.flickr.com/services/feeds/photos_public.gne?format=json&nojsoncallback=1";
+
+    @Override
+    public void onDataAvailable(List<Photo> data, DownloadStatus status) {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,15 +66,6 @@ public class MainActivity extends AppCompatActivity implements GetRawData.OnDown
         Log.d(TAG, "onOptionsItemSelected: returned");
         return super.onOptionsItemSelected(item);
     }
-    @Override
-    public void onDownloadComplete(String data, DownloadStatus downloadStatus) {
-        if(downloadStatus == DownloadStatus.OK) {
-            Log.d(TAG, "onDownloadComplete: data = " + data);
-        }
-        else {
-            Log.e(TAG, "onDownloadComplete: Error = " + downloadStatus);
-        }
 
-    }
 
 }
