@@ -4,19 +4,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements GetFlickrJsonData.OnDataAvailable {
     private static final String TAG = "MainActivity";
-    private String feedUrl = "https://www.flickr.com/services/feeds/photos_public.gne?format=json&nojsoncallback=1";
+    private String feedUrl = "https://www.flickr.com/services/feeds/photos_public.gne";
 
     @Override
     public void onDataAvailable(List<Photo> data, DownloadStatus status) {
@@ -28,19 +23,20 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJsonData
         Log.d(TAG, "onCreate: started");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        GetRawData downloadJson = new GetRawData(this);
-        downloadJson.execute(feedUrl);
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//
+//        FloatingActionButton fab = findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
+        GetFlickrJsonData getFlickrJsonData = new GetFlickrJsonData(
+                "en",feedUrl,this,true);
+        getFlickrJsonData.executeOnSameThread("android");
     }
 
     @Override
@@ -60,9 +56,9 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJsonData
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
         Log.d(TAG, "onOptionsItemSelected: returned");
         return super.onOptionsItemSelected(item);
     }
