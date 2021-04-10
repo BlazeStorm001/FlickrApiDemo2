@@ -51,6 +51,21 @@ public class GetRawData extends AsyncTask<String,Void,String> {
         return jsonFeed;
     }
 
+    //used for downloading the data without creating a new background thread
+    //when we use the execute() another background thread is created
+    //when we use the doInBackground and onPostExecute directly we dont create a background thread
+    //and the code runs in same thread
+    //normal asyncktask procedure:-
+    //1. create new background thread
+    //2. call doInBackground()
+    //3. call onPostExecute()
+    //same thing happens in the below method:-
+    public void runInSameThread(String s) {
+        Log.d(TAG, "runInSameThread: start");
+        onPostExecute(doInBackground(s));
+        Log.d(TAG, "runInSameThread: ends");
+    }
+
     private String downloadJson(String urlPath) {
         StringBuilder jsonResult = new StringBuilder();
         HttpURLConnection connection = null;

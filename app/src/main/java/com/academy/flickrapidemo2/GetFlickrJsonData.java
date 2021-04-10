@@ -1,6 +1,7 @@
 package com.academy.flickrapidemo2;
 
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -10,15 +11,29 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-class GetFlickrJsonData implements GetRawData.OnDownloadComplete {
+class GetFlickrJsonData extends AsyncTask<String,Void,List<Photo>> implements GetRawData.OnDownloadComplete {
     private static final String TAG = "GetFlickrJsonData";
     private List<Photo> mPhotoList = null;
     private String mLanguage;
     private String mBaseUrl;
     private final OnDataAvailable mCallback;
     private boolean mMatchAll;
-    
 
+
+    @Override
+    protected void onPostExecute(List<Photo> photos) {
+        super.onPostExecute(photos);
+    }
+
+    @Override
+    protected List<Photo> doInBackground(String... strings) {
+        String finalUrl = createUri(strings[0],mLanguage,mMatchAll);
+        GetRawData downloadJson = new GetRawData(this);
+        Log.d(TAG, "executeOnSameThread: finalurl :" + finalUrl);
+        //call getRawData on same thread
+        downloadJson.runInSameThread(finalUrl);
+        return mPhotoList;
+    }
 
     public GetFlickrJsonData(String mLanguage, String mBaseUrl, OnDataAvailable mCallback, boolean mMatchAll) {
         this.mLanguage = mLanguage;
@@ -38,10 +53,7 @@ class GetFlickrJsonData implements GetRawData.OnDownloadComplete {
     //be passed to the GetRawData
     void executeOnSameThread(String searchCriteria) {
         Log.d(TAG, "executeOnSameThread: start");
-        GetRawData downloadJson = new GetRawData(this);
-        String finalUrl = createUri(searchCriteria,mLanguage,mMatchAll);
-        Log.d(TAG, "executeOnSameThread: finalurl :" + finalUrl);
-        downloadJson.execute(finalUrl);
+
         Log.d(TAG, "executeOnSameThread: end");
     }
 
@@ -89,7 +101,7 @@ class GetFlickrJsonData implements GetRawData.OnDownloadComplete {
                     String tags = photo.getString("tags");
                     //create and add the photo to the arraylist
                     Photo photoObj = new Photo(title,author,authorId,tags
-                    ,media,link);
+                            ,media,link);
                     mPhotoList.add(photoObj);
                     Log.d(TAG, "onDownloadComplete: photo object " + i + "\n " + photoObj.toString());
                 }
