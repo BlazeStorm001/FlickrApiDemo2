@@ -18,20 +18,24 @@ class GetFlickrJsonData extends AsyncTask<String,Void,List<Photo>> implements Ge
     private String mBaseUrl;
     private final OnDataAvailable mCallback;
     private boolean mMatchAll;
-
+    private boolean runningOnSameThread = false;
 
     @Override
     protected void onPostExecute(List<Photo> photos) {
         super.onPostExecute(photos);
+        if(mCallback != null) {
+            mCallback.onDataAvailable(mPhotoList,DownloadStatus.OK);
+        }
     }
 
     @Override
     protected List<Photo> doInBackground(String... strings) {
         String finalUrl = createUri(strings[0],mLanguage,mMatchAll);
         GetRawData downloadJson = new GetRawData(this);
-        Log.d(TAG, "executeOnSameThread: finalurl :" + finalUrl);
+        Log.d(TAG, " finalurl :" + finalUrl);
         //call getRawData on same thread
         downloadJson.runInSameThread(finalUrl);
+        Log.d(TAG, "doInBackground: finish");
         return mPhotoList;
     }
 
@@ -80,6 +84,7 @@ class GetFlickrJsonData extends AsyncTask<String,Void,List<Photo>> implements Ge
     }
     @Override
     public void onDownloadComplete(String data, DownloadStatus downloadStatus) {
+        Log.d(TAG, "onDownloadComplete: starts");
         if(downloadStatus == DownloadStatus.OK) {
             mPhotoList = new ArrayList<Photo>();
             try {
@@ -116,7 +121,7 @@ class GetFlickrJsonData extends AsyncTask<String,Void,List<Photo>> implements Ge
             downloadStatus = DownloadStatus.FAILED_OR_EMPTY;
             Log.e(TAG, "onDownloadComplete: Error = " + downloadStatus);
         }
-        if(mCallback != null) {
+        if(mCallback != null && runningOnSameThread) {
             mCallback.onDataAvailable(mPhotoList,downloadStatus);
         }
         else {

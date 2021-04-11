@@ -39,6 +39,7 @@ public class GetRawData extends AsyncTask<String,Void,String> {
 
     @Override
     protected String doInBackground(String... strings) {
+        Log.d(TAG, "doInBackground: starts");
         if(strings[0] == null) {
             downloadStatus = DownloadStatus.NOT_INITIALIZED;
         }
@@ -48,6 +49,7 @@ public class GetRawData extends AsyncTask<String,Void,String> {
             downloadStatus = DownloadStatus.FAILED_OR_EMPTY;
         }
         Log.d(TAG, "doInBackground: " + jsonFeed);
+        Log.d(TAG, "doInBackground: end");
         return jsonFeed;
     }
 
@@ -63,6 +65,9 @@ public class GetRawData extends AsyncTask<String,Void,String> {
     public void runInSameThread(String s) {
         Log.d(TAG, "runInSameThread: start");
         onPostExecute(doInBackground(s));
+        if(mCallback != null) {
+            mCallback.onDownloadComplete(doInBackground(s),downloadStatus);
+        }
         Log.d(TAG, "runInSameThread: ends");
     }
 
