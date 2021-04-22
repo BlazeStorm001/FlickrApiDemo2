@@ -1,27 +1,37 @@
 package com.academy.flickrapidemo2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements GetFlickrJsonData.OnDataAvailable {
+public class MainActivity extends AppCompatActivity implements GetFlickrJsonData.OnDataAvailable,
+        RecyclerViewItemClickListener.OnRecyclerClickListener {
     private static final String TAG = "MainActivity";
     private String feedUrl = "https://www.flickr.com/services/feeds/photos_public.gne";
+    private RecyclerView recyclerView;
+    private FlickrRecyclerViewAdapter flickrRecyclerViewAdapter;
+    private GetFlickrJsonData getFlickrJsonData;
 
     @Override
     public void onDataAvailable(List<Photo> data, DownloadStatus status) {
-        if(status == DownloadStatus.OK) {
+        if (status == DownloadStatus.OK) {
             Log.d(TAG, "onDataAvailable: photo processed");
-        }
-        else {
+            flickrRecyclerViewAdapter.loadNewData(data);
+        } else {
             Log.d(TAG, "onDataAvailable: failed in processing");
         }
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +49,25 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJsonData
 //                        .setAction("Action", null).show();
 //            }
 //        });
-
+        recyclerView = findViewById(R.id.recycler_view);
+        //create a new adapter
+        flickrRecyclerViewAdapter =
+                new FlickrRecyclerViewAdapter(new ArrayList<Photo>(), this);
+        //set the layout manager it is necessary in recyclerview
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //set adapter
+        recyclerView.setAdapter(flickrRecyclerViewAdapter);
+        RecyclerViewItemClickListener recyclerViewItemClickListener = new
+                RecyclerViewItemClickListener(this,recyclerView,this);
+        recyclerView.addOnItemTouchListener(recyclerViewItemClickListener);
     }
 
     @Override
     protected void onResume() {
         Log.d(TAG, "onResume: start");
         super.onResume();
-        GetFlickrJsonData getFlickrJsonData = new GetFlickrJsonData(
-                "en",feedUrl,this,true);
+        getFlickrJsonData = new GetFlickrJsonData(
+                "en", feedUrl, this, true);
         getFlickrJsonData.execute("android");
         Log.d(TAG, "onResume: end");
     }
@@ -76,5 +96,15 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJsonData
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onItemClick(View v, int position) {
+        Intent intent = new Intent(this,PhotoDetailActivity.class);
+        intent.putExtra("photoObj",flickrRecyclerViewAdapter.getPhoto(position));
+        startActivity(intent);
+    }
 
+    @Override
+    public void onItemLongClick(View view, int position) {
+
+    }
 }

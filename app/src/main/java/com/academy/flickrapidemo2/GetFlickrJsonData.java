@@ -100,6 +100,8 @@ class GetFlickrJsonData extends AsyncTask<String,Void,List<Photo>> implements Ge
                     String title = photo.getString("title");
 
                     String media = photo.getJSONObject("media").getString("m");
+                    //replaces the first _m found in string with _b
+                    //to get the url of the bigger version of image
                     String link = media.replaceFirst("_m","_b");
                     String author = photo.getString("author");
                     String authorId = photo.getString("author_id");

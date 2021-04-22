@@ -1,11 +1,16 @@
 package com.academy.flickrapidemo2;
 
-class Photo {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+class Photo implements Parcelable {
     private String mTitle;
     private String mAuthor;
     private String mAuthorId;
     private String mTags;
+    //stores url of small image
     private String mImage;
+    //stores url of big image
     private String mLink;
 
     public Photo(String mTitle, String mAuthor, String mAuthorId, String mTags, String mImage, String mLink) {
@@ -15,6 +20,37 @@ class Photo {
         this.mTags = mTags;
         this.mImage = mImage;
         this.mLink = mLink;
+    }
+
+    public static final Parcelable.Creator<Photo> CREATOR = new Parcelable.Creator<Photo>() {
+
+        public Photo createFromParcel(Parcel in) {
+            return new Photo(in);
+        }
+
+        public Photo[] newArray(int size) {
+            return new Photo[size];
+        }
+    };
+
+    public Photo(Parcel in) {
+        this.mLink = in.readString();
+        this.mTitle = in.readString();
+        this.mAuthor = in.readString();
+        this.mTags = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mLink);
+        dest.writeString(mTitle);
+        dest.writeString(mAuthor);
+        dest.writeString(mTags);
     }
 
     String getTitle() {
