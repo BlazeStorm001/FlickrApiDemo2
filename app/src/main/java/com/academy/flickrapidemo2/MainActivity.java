@@ -7,20 +7,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements GetFlickrJsonData.OnDataAvailable,
+public class MainActivity extends BaseActivity implements GetFlickrJsonData.OnDataAvailable,
         RecyclerViewItemClickListener.OnRecyclerClickListener {
     private static final String TAG = "MainActivity";
     private String feedUrl = "https://www.flickr.com/services/feeds/photos_public.gne";
     private RecyclerView recyclerView;
     private FlickrRecyclerViewAdapter flickrRecyclerViewAdapter;
     private GetFlickrJsonData getFlickrJsonData;
+    static final String PHOTO_TRANSFER = "PHOTO_TRANSFER";
 
     @Override
     public void onDataAvailable(List<Photo> data, DownloadStatus status) {
@@ -38,8 +38,7 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJsonData
         Log.d(TAG, "onCreate: started");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        Toolbar toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+        activateToolbar(false);
 //
 //        FloatingActionButton fab = findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJsonData
     @Override
     public void onItemClick(View v, int position) {
         Intent intent = new Intent(this,PhotoDetailActivity.class);
-        intent.putExtra("photoObj",flickrRecyclerViewAdapter.getPhoto(position));
+        intent.putExtra(PHOTO_TRANSFER,flickrRecyclerViewAdapter.getPhoto(position));
         startActivity(intent);
     }
 

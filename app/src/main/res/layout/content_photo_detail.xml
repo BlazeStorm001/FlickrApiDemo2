@@ -2,10 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/primary_light"
+    android:orientation="vertical"
+    android:theme="@style/AppTheme"
     tools:context=".PhotoDetailActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/primary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,6 +31,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/cardview_light_background"
             app:cardCornerRadius="8dp">
 
             <LinearLayout
@@ -26,7 +43,13 @@
                     android:id="@+id/photo_author"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TextView" />
+                    android:background="@color/accent"
+                    android:fontFamily="sans-serif-black"
+                    android:inputType="textCapSentences"
+                    android:padding="4dp"
+                    android:text="TextView"
+                    android:textColor="@color/primary_text"
+                    android:textSize="24sp" />
 
                 <ImageView
                     android:id="@+id/photo_image"
@@ -40,14 +63,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="TextView" />
+                    android:padding="4dp"
+                    android:text="TextView"
+                    android:textColor="@color/primary_text"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/photo_tags"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="TextView" />
+                    android:padding="4dp"
+                    android:text="TextView"
+                    android:textColor="@color/secondary_text" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

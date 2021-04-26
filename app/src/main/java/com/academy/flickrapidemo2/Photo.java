@@ -1,9 +1,8 @@
 package com.academy.flickrapidemo2;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.io.Serializable;
 
-class Photo implements Parcelable {
+class Photo implements Serializable {
     private String mTitle;
     private String mAuthor;
     private String mAuthorId;
@@ -12,7 +11,10 @@ class Photo implements Parcelable {
     private String mImage;
     //stores url of big image
     private String mLink;
-
+    //java generates different uids on different jvm
+    //which could lead to problems in deserialization
+    //hence define a custom SerialId
+    private static final long serialVersionUID = 1L;
     public Photo(String mTitle, String mAuthor, String mAuthorId, String mTags, String mImage, String mLink) {
         this.mTitle = mTitle;
         this.mAuthor = mAuthor;
@@ -22,36 +24,36 @@ class Photo implements Parcelable {
         this.mLink = mLink;
     }
 
-    public static final Parcelable.Creator<Photo> CREATOR = new Parcelable.Creator<Photo>() {
-
-        public Photo createFromParcel(Parcel in) {
-            return new Photo(in);
-        }
-
-        public Photo[] newArray(int size) {
-            return new Photo[size];
-        }
-    };
-
-    public Photo(Parcel in) {
-        this.mLink = in.readString();
-        this.mTitle = in.readString();
-        this.mAuthor = in.readString();
-        this.mTags = in.readString();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mLink);
-        dest.writeString(mTitle);
-        dest.writeString(mAuthor);
-        dest.writeString(mTags);
-    }
+//    public static final Parcelable.Creator<Photo> CREATOR = new Parcelable.Creator<Photo>() {
+//
+//        public Photo createFromParcel(Parcel in) {
+//            return new Photo(in);
+//        }
+//
+//        public Photo[] newArray(int size) {
+//            return new Photo[size];
+//        }
+//    };
+//
+//    public Photo(Parcel in) {
+//        this.mLink = in.readString();
+//        this.mTitle = in.readString();
+//        this.mAuthor = in.readString();
+//        this.mTags = in.readString();
+//    }
+//
+//    @Override
+//    public int describeContents() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public void writeToParcel(Parcel dest, int flags) {
+//        dest.writeString(mLink);
+//        dest.writeString(mTitle);
+//        dest.writeString(mAuthor);
+//        dest.writeString(mTags);
+//    }
 
     String getTitle() {
         return mTitle;
